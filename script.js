@@ -44,132 +44,63 @@ submit.addEventListener("click", (e) => {
 
 getWeather("Delhi");
 
-let otherCity = {
-  Greenland: {},
-  Boston: {},
-  Alaska: {},
-  Iceland: {},
-  London: {},
-  Russia: {},
-};
+const otherCityWeather = (result, endPoints) => {
+  // Iterate over each city and populate the corresponding weather data
+  for (let i = 0; i < endPoints.length; i++) {
+    const city = endPoints[i];
+    const cityRow = document.querySelector(`.${city}`);
+    const cityElement = cityRow.parentNode;
 
-// const getWeatherOfOtherCity = async (city) => {
-//   const url =
-//     "https://weather-by-api-ninjas.p.rapidapi.com/v1/weather?city=" + city;
+    if (cityElement) {
+      const weatherData = result[i];
 
-//   try {
-//     const response = await fetch(url, options);
-//     const result = await response.json();
-//     // const data = JSON.parse(result)
-//     otherCity[city] = result;
-//     console.log(otherCity.Russia);
-//     Greenlandtemp.innerHTML = otherCity.Greenland.temp;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
-
-// for (let city in otherCity) {
-//   setTimeout(() => {
-//     getWeatherOfOtherCity(city);
-//     console.log("Inside setTimeout - This code will run after 3 seconds");
-//   }, 8000);
-// }
-
-const fetchWeatherData = async (city) => {
-  const url = "https://weather-by-api-ninjas.p.rapidapi.com/v1/weather?city=" + city;
-
-  try {
-    const response = await fetch(url, options);
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    console.error(error);
-    return null;
+      cityElement.querySelector(".cloud_pct").innerHTML = weatherData.cloud_pct;
+      cityElement.querySelector(".temp").innerHTML = weatherData.temp;
+      cityElement.querySelector(".feels_like").innerHTML =
+        weatherData.feels_like;
+      cityElement.querySelector(".humidity").innerHTML = weatherData.humidity;
+      cityElement.querySelector(".min_temp").innerHTML = weatherData.min_temp;
+      cityElement.querySelector(".max_temp").innerHTML = weatherData.max_temp;
+      cityElement.querySelector(".wind_speed").innerHTML =
+        weatherData.wind_speed;
+      cityElement.querySelector(".wind_degrees").innerHTML =
+        weatherData.wind_degrees;
+      cityElement.querySelector(".sunrise").innerHTML = weatherData.sunrise;
+      cityElement.querySelector(".sunset").innerHTML = weatherData.sunset;
+    }
   }
 };
 
-const updateWeatherData = (city, weatherData) => {
-  otherCity[city] = weatherData;
+const fetchData = async (endPoint) => {
+  const response = await fetch(
+    "https://weather-by-api-ninjas.p.rapidapi.com/v1/weather?city=" + endPoint,
+    options
+  );
+  const data = await response.json();
+  return data;
 };
-
-const getCitiesWeatherData = async () => {
-  const cities = Object.keys(otherCity);
-
-  for (const city of cities) {
-    const weatherData = await fetchWeatherData(city);
-    updateWeatherData(city, weatherData);
+const fetchMultipleData = async (endPoints) => {
+  const results = [];
+  for (const endPoint of endPoints) {
+    const result = await fetchData(endPoint);
+    results.push(result);
   }
-
-  console.log(otherCity);
-
-
-setTimeout(() => {
-  Greenlandcloud_pct.innerHTML = otherCity.Greenland.cloud_pct
-  Greenlandtemp.innerHTML = otherCity.Greenland.temp
-  Greenlandfeels_like.innerHTML = otherCity.Greenland.feels_like
-  Greenlandhumidity.innerHTML = otherCity.Greenland.humidity
-  Greenlandmin_temp.innerHTML = otherCity.Greenland.min_temp
-  Greenlandmax_temp.innerHTML = otherCity.Greenland.max_temp
-  Greenlandwind_speed.innerHTML = otherCity.Greenland.wind_speed
-  Greenlandwind_degrees.innerHTML = otherCity.Greenland.wind_degrees
-  Greenlandsunrise.innerHTML = otherCity.Greenland.sunrise
-  Greenlandsunset.innerHTML = otherCity.Greenland.sunset
-  
-  Bostoncloud_pct.innerHTML = otherCity.Boston.cloud_pct
-  Bostontemp.innerHTML = otherCity.Boston.temp
-  Bostonfeels_like.innerHTML = otherCity.Boston.feels_like
-  Bostonhumidity.innerHTML = otherCity.Boston.humidity
-  Bostonmin_temp.innerHTML = otherCity.Boston.min_temp
-  Bostonmax_temp.innerHTML = otherCity.Boston.max_temp
-  Bostonwind_speed.innerHTML = otherCity.Boston.wind_speed
-  Bostonwind_degrees.innerHTML = otherCity.Boston.wind_degrees
-  Bostonsunrise.innerHTML = otherCity.Boston.sunrise
-  Bostonsunset.innerHTML = otherCity.Boston.sunset
-
-  Alaskacloud_pct.innerHTML = otherCity.Alaska.cloud_pct
-  Alaskatemp.innerHTML = otherCity.Alaska.temp
-  Alaskafeels_like.innerHTML = otherCity.Alaska.feels_like
-  Alaskahumidity.innerHTML = otherCity.Alaska.humidity
-  Alaskamin_temp.innerHTML = otherCity.Alaska.min_temp
-  Alaskamax_temp.innerHTML = otherCity.Alaska.max_temp
-  Alaskawind_speed.innerHTML = otherCity.Alaska.wind_speed
-  Alaskawind_degrees.innerHTML = otherCity.Alaska.wind_degrees
-  Alaskasunrise.innerHTML = otherCity.Alaska.sunrise
-  Alaskasunset.innerHTML = otherCity.Alaska.sunset
-
-  Icelandcloud_pct.innerHTML = otherCity.Iceland.cloud_pct
-  Icelandtemp.innerHTML = otherCity.Iceland.temp
-  Icelandfeels_like.innerHTML = otherCity.Iceland.feels_like
-  Icelandhumidity.innerHTML = otherCity.Iceland.humidity
-  Icelandmin_temp.innerHTML = otherCity.Iceland.min_temp
-  Icelandmax_temp.innerHTML = otherCity.Iceland.max_temp
-  Icelandwind_speed.innerHTML = otherCity.Iceland.wind_speed
-  Icelandwind_degrees.innerHTML = otherCity.Iceland.wind_degrees
-  Icelandsunrise.innerHTML = otherCity.Iceland.sunrise
-  Icelandsunset.innerHTML = otherCity.Iceland.sunset
-
-  Londoncloud_pct.innerHTML = otherCity.London.cloud_pct
-  Londontemp.innerHTML = otherCity.London.temp
-  Londonfeels_like.innerHTML = otherCity.London.feels_like
-  Londonhumidity.innerHTML = otherCity.London.humidity
-  Londonmin_temp.innerHTML = otherCity.London.min_temp
-  Londonmax_temp.innerHTML = otherCity.London.max_temp
-  Londonwind_speed.innerHTML = otherCity.London.wind_speed
-  Londonwind_degrees.innerHTML = otherCity.London.wind_degrees
-  Londonsunrise.innerHTML = otherCity.London.sunrise
-  Londonsunset.innerHTML = otherCity.London.sunset
-
-  Russiacloud_pct.innerHTML = otherCity.Russia.cloud_pct
-  Russiatemp.innerHTML = otherCity.Russia.temp
-  Russiafeels_like.innerHTML = otherCity.Russia.feels_like
-  Russiahumidity.innerHTML = otherCity.Russia.humidity
-  Russiamin_temp.innerHTML = otherCity.Russia.min_temp
-  Russiamax_temp.innerHTML = otherCity.Russia.max_temp
-  Russiawind_speed.innerHTML = otherCity.Russia.wind_speed
-  Russiawind_degrees.innerHTML = otherCity.Russia.wind_degrees
-  Russiasunrise.innerHTML = otherCity.Russia.sunrise
-  Russiasunset.innerHTML = otherCity.Russia.sunset
-  }, 0000)};
-
-getCitiesWeatherData();
+  return results;
+};
+const endPoints = [
+  "Greenland",
+  "Boston",
+  "Alaska",
+  "Iceland",
+  "London",
+  "Russia",
+];
+fetchMultipleData(endPoints)
+  .then((result) => {
+    console.log("fetch data is:", result);
+    console.log(result[0].temp);
+    return otherCityWeather(result, endPoints);
+  })
+  .catch((error) => {
+    console.log("error is:", error.stack);
+  });
